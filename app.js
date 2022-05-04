@@ -13,6 +13,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 //app.use('/', require('./routes/'));
 app.use('/users', require('./routes/users'));
+app.use('/users/:id', require('./routes/users'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
