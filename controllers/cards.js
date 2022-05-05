@@ -16,14 +16,17 @@ module.exports.deleteCard = (req, res) => {
 }
 
 module.exports.createCard = (req, res) => {
-  console.log(req.body);
   const { name, link, owner } = req.body;
-
-  console.log(name, link, owner);
-
   Card.create( {name: name, link: link, owner: owner} )
   .then(card => res.status(200).send( { data: card } ))
-  .catch( err => res.status(500).send( {message: err.message} ));
+  .catch( err => {
+    console.log(err.name);
+    if (err.name === 'ValidationError') {
+      res.status(400).send({ message: 'Переданы некорректные данные ' });
+      return;
+    }
+    res.status(500).send( {message: err.message} )
+  });
 }
 
 module.exports.likeCard = (req, res) => {
