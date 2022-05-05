@@ -27,7 +27,6 @@ module.exports.getUserById = (req, res) => {
 }
 
 module.exports.createUser = (req, res) => {
-  console.log(req.body);
   const { name, about, avatar } = req.body;
   User.create( {name: name, about: about, avatar: avatar} )
   .then(user => res.status(200).send( { data: user } ))
@@ -44,14 +43,23 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = async (req, res) => {
   try {
     const {name, about} = req.body;
+    /*
     if (name.length < 2 || name.length > 30) {
       res.status(400).send({ message: 'Передано некорректное имя пользователя' });
       return;
     } else if (about.length < 2 || about.length > 30) {
-      res.status(400).send({ message: 'Передана некорректная информация о пользователя' });
+      res.status(400).send({ message: 'Передана некорректная информация о пользователе' });
       return;
     };
+    */
     const updatedUser = await User.findByIdAndUpdate(req.user._id, {name: name, about: about}, {new: true});
+    if (name.length < 2 || name.length > 30) {
+      res.status(400).send({ message: 'Передано некорректное имя пользователя' });
+      return;
+    } else if (about.length < 2 || about.length > 30) {
+      res.status(400).send({ message: 'Передана некорректная информация о пользователе' });
+      return;
+    };
     res.status(200).send( {data: updatedUser});
   } catch(err) {
     if (err.name === 'ValidationError') {
