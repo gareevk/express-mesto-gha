@@ -7,7 +7,11 @@ module.exports.getCards = (req, res) => {
 }
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+  if (req.params.cardId !== 24) {
+    res.status(400).send({ message: 'Передан некорректный id карточки' });
+    return;
+  }
+  Card.findByIdAndRemove(req.params.cardId)
   .then( card => {
     if (card === null) {
       res.status(404).send({ message: 'Карточка не найдена' });
@@ -33,6 +37,7 @@ module.exports.createCard = async (req, res) => {
   }
 }
 
+/*
 module.exports.likeCard = async (req, res) => {
   try {
     if (req.params.cardId.length !== 24) {
@@ -50,6 +55,37 @@ module.exports.likeCard = async (req, res) => {
     };
     res.status(200).send( {data: card});
   } catch(err) {
+    if (err.name === 'CastError') {
+      res.status(400).send({ message: 'Передан некорректный id карточки', err });
+      return;
+    }
+    res.status(500).send( {message: err.message} );
+  }
+}
+*/
+
+module.exports.likeCard = async (req, res) => {
+  try {
+    const card = await Card.findById(req.params.cardId);
+     if (card === null) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    } else if (req.params.cardId.length !== 24) {
+      res.status(400).send({ message: 'Передан некорректный id карточки' });
+      return;
+    };
+    await Card.findByIdAndUpdate(
+      req.params.cardId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true },
+    );
+
+    res.status(200).send( {data: card});
+  } catch(err) {
+    if (err.name === 'CastError') {
+      res.status(400).send({ message: 'Передан некорректный id карточки', err });
+      return;
+    }
     res.status(500).send( {message: err.message} );
   }
 }
