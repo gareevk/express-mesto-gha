@@ -11,7 +11,13 @@ module.exports.deleteCard = (req, res) => {
   const _id = req.params.id;
   console.log(_id);
   Card.findByIdAndRemove( _id)
-  .then( card => res.status(200).send( {data: card} ))
+  .then( card => {
+    if (card === null) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    }
+    res.status(200).send( {data: card} )
+  })
   .catch( err => res.status(500).send( {message: err.message} ));
 }
 
@@ -30,21 +36,41 @@ module.exports.createCard = (req, res) => {
 }
 
 module.exports.likeCard = (req, res) => {
+  if (req.params.cardId.length !== 24) {
+    res.status(400).send({ message: 'Передан некорректный id карточки' });
+    return;
+  }
   Card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } },
   { new: true },
   )
-  .then( card => res.status(200).send( {data: card}) )
+  .then( card => {
+    if (card === null) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    }
+    res.status(200).send( {data: card})
+  })
   .catch( err => res.status(500).send( {message: err.message} ));
 }
 
 module.exports.dislikeCard = (req, res) => {
+  if (req.params.cardId.length !== 24) {
+    res.status(400).send({ message: 'Передан некорректный id карточки' });
+    return;
+  }
   Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } },
   { new: true },
   )
-  .then( card => res.status(200).send( {data: card}) )
+  .then( card => {
+    if (card === null) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    }
+    res.status(200).send( {data: card})
+  })
   .catch( err => res.status(500).send( {message: err.message} ));
 }

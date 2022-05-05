@@ -34,7 +34,7 @@ module.exports.createUser = (req, res) => {
   .catch( err => {
     console.log(err.name);
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные ' });
+      res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
     res.status(500).send( {message: err.message} )
@@ -44,11 +44,15 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = async (req, res) => {
   try {
     const {name, about} = req.body;
+    if (name.length < 2 || name.length > 30 || about.length < 2 || about.length > 30) {
+      res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+      return;
+    };
     const updatedUser = await User.findByIdAndUpdate(req.user._id, {name: name, about: about}, {new: true});
     res.status(200).send( {data: updatedUser});
   } catch(err) {
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные ' });
+      res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
     res.status(500).send( { message: err.message } );
@@ -63,7 +67,7 @@ module.exports.updateAvatar = async (req, res) => {
     res.status(200).send( {data: updatedUser});
   } catch(err) {
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные ' });
+      res.status(400).send({ message: 'Переданы некорректные данные' });
       return;
     }
     res.status(500).send( { message: err.message } );
