@@ -44,8 +44,11 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = async (req, res) => {
   try {
     const {name, about} = req.body;
-    if (name.length < 2 || name.length > 30 || about.length < 2 || about.length > 30) {
-      res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+    if (name.length < 2 || name.length > 30) {
+      res.status(400).send({ message: 'Передано некорректное имя пользователя' });
+      return;
+    } else if (about.length < 2 || about.length > 30) {
+      res.status(400).send({ message: 'Передана некорректная информация о пользователя' });
       return;
     };
     const updatedUser = await User.findByIdAndUpdate(req.user._id, {name: name, about: about}, {new: true});
