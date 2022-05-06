@@ -1,4 +1,5 @@
 const Card = require('../models/card');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -8,7 +9,7 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = async (req, res) => {
   try {
-    if (req.params.cardId.length !== 24) {
+    if (req.params.cardId.length !== 24 || !ObjectId.isValid(req.params.cardId)) {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
     }
@@ -42,18 +43,10 @@ module.exports.createCard = async (req, res) => {
 
 module.exports.likeCard = async (req, res) => {
   try {
-    if (req.params.cardId.length !== 24) {
+    if (req.params.cardId.length !== 24 || !ObjectId.isValid(req.params.cardId)) {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
     }
-    /*
-    const card = await Card.findById(req.params.cardId);
-    console.log(card);
-    if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
-      return;
-    }
-    */
     const likeCard = await Card.findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
@@ -77,18 +70,10 @@ module.exports.likeCard = async (req, res) => {
 
 module.exports.dislikeCard = async (req, res) => {
   try {
-    if (req.params.cardId.length !== 24) {
+    if (req.params.cardId.length !== 24 || !ObjectId.isValid(req.params.cardId)) {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
     }
-    /*
-    const card = await Card.findById(req.params.cardId);
-    console.log(card);
-    if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
-      return;
-    }
-    */
     const dislikeCard = await Card.findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },
