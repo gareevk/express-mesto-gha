@@ -23,21 +23,6 @@ module.exports.deleteCard = async (req, res) => {
   } catch(err) {
     res.status(500).send( {message: err.message} );
   }
-  /*
-  if (req.params.cardId !== 24) {
-    res.status(400).send({ message: 'Передан некорректный id карточки' });
-    return;
-  }
-  Card.findByIdAndRemove(req.params.cardId)
-  .then( card => {
-    if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
-      return;
-    }
-    res.status(200).send( {data: card} )
-  })
-  .catch( err => res.status(500).send( {message: err.message} ));
-  */
 }
 
 module.exports.createCard = async (req, res) => {
