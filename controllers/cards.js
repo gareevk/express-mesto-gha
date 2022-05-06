@@ -45,18 +45,19 @@ module.exports.likeCard = async (req, res) => {
     if (req.params.cardId.length !== 24) {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
-    } else {
-      const card = await Card.findByIdAndUpdate(
-        req.params.cardId,
-        { $addToSet: { likes: req.user._id } },
-        { new: true },
-      );
-      if (card) {
-        res.status(200).send( {data: card});
-      } else {
-        res.status(404).send({ message: 'Карточка не найдена' });
-      }
-    };
+    }
+    const card = await Card.findById(req.params.cardId);
+    console.log(card);
+    if (!card) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    }
+    const likeCard = await Card.findByIdAndUpdate(
+      req.params.cardId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true },
+    );
+    res.status(200).send( {data: likeCard});
   } catch(err) {
     if (err.name === 'CastError') {
       res.status(400).send({ message: 'Передан некорректный id карточки', err });
@@ -73,17 +74,23 @@ module.exports.dislikeCard = async (req, res) => {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
     }
-    const card = await Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $pull: { likes: req.user._id } },
-      { new: true },
-    );
+    const card = await Card.findById(req.params.cardId);
+    console.log(card);
     if (!card) {
       res.status(404).send({ message: 'Карточка не найдена' });
       return;
     }
-    res.status(200).send( {data: card})
+    const dislikeCard = await Card.findByIdAndUpdate(
+      req.params.cardId,
+      { $pull: { likes: req.user._id } },
+      { new: true },
+    );
+    res.status(200).send( {data: dislikeCard})
   } catch(err) {
+    if (err.name === 'CastError') {
+      res.status(400).send({ message: 'Передан несуществующий id карточки', err });
+      return;
+    }
     res.status(500).send( {message: err.message} );
   }
 }
