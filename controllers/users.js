@@ -43,23 +43,7 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = async (req, res) => {
   try {
     const {name, about} = req.body;
-    /*
-    if (name.length < 2 || name.length > 30) {
-      res.status(400).send({ message: 'Передано некорректное имя пользователя' });
-      return;
-    } else if (about.length < 2 || about.length > 30) {
-      res.status(400).send({ message: 'Передана некорректная информация о пользователе' });
-      return;
-    };
-    */
-    const updatedUser = await User.findByIdAndUpdate(req.user._id, {name: name, about: about}, {new: true});
-    if (name.length < 2 || name.length > 30) {
-      res.status(400).send({ message: 'Передано некорректное имя пользователя' });
-      return;
-    } else if (about.length < 2 || about.length > 30) {
-      res.status(400).send({ message: 'Передана некорректная информация о пользователе' });
-      return;
-    };
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, {name: name, about: about}, {new: true, runValidators: true});
     res.status(200).send( {data: updatedUser});
   } catch(err) {
     if (err.name === 'ValidationError') {
@@ -74,7 +58,6 @@ module.exports.updateAvatar = async (req, res) => {
   try {
     const { avatar } = req.body;
     const updatedUser = await User.findByIdAndUpdate(req.user._id, {avatar: avatar}, {new: true});
-    console.log(updatedUser);
     res.status(200).send( {data: updatedUser});
   } catch(err) {
     if (err.name === 'ValidationError') {
