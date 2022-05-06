@@ -60,17 +60,18 @@ module.exports.likeCard = async (req, res) => {
     if (req.params.cardId.length !== 24) {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
+    } else {
+      const card = await Card.findByIdAndUpdate(
+        req.params.cardId,
+        { $addToSet: { likes: req.user._id } },
+        { new: true },
+      );
+      if (card) {
+        res.status(200).send( {data: card});
+      } else {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      }
     };
-    const card = await Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $addToSet: { likes: req.user._id } },
-      { new: true },
-    );
-    if (!card) {
-      res.status(404).send({ message: 'Карточка не найдена' });
-      return;
-    };
-    res.status(200).send( {data: card});
   } catch(err) {
     if (err.name === 'CastError') {
       res.status(400).send({ message: 'Передан некорректный id карточки', err });
