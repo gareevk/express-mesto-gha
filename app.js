@@ -23,17 +23,6 @@ app.use(express.json());
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
-/*
-app.use('/users', require('./routes/users'));
-app.use('/users/:id', require('./routes/users'));
-app.use('/users/me', require('./routes/users'));
-app.use('/cards/me/avatar', require('./routes/users'));
-
-app.use('/cards', require('./routes/cards'));
-app.use('/cards/:id', require('./routes/cards'));
-app.use('/cards/:cardId/likes', require('./routes/cards'));
-*/
-
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Такой страницы не существует' });
 });
