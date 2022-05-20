@@ -8,15 +8,20 @@ module.exports.getCards = (req, res) => {
 }
 
 module.exports.deleteCard = async (req, res) => {
+  console.log(req.user._id);
   try {
     if (req.params.cardId.length !== 24 || !ObjectId.isValid(req.params.cardId)) {
       res.status(400).send({ message: 'Передан некорректный id карточки' });
       return;
     }
     const deleteCard = await Card.findById(req.params.cardId);
-    console.log(deleteCard);
+    console.log(deleteCard.owner);
     if (!deleteCard) {
       res.status(404).send({ message: 'Карточка не найдена' });
+      return;
+    }
+    if (req.user._id !== deleteCard.owner) {
+      res.status(404).send({ message: 'У вас нет прав на удаление данной карточки' });
       return;
     }
     await Card.findByIdAndRemove(req.params.cardId);
