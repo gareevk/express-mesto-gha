@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const {login, createUser} = require('./controllers/users');
+const { celebrate, Joi } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -26,8 +27,21 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required(),
+    password: Joi.string().required()
+  })
+}),login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/^(http|https):\/\/(www\.)?[-a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&\/=]*)?/i),
+    email: Joi.string().required(),
+    password: Joi.string().required()
+  })
+}),createUser);
 
 app.use(auth);
 

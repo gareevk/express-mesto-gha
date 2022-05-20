@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
   try {
     payload = await jwt.verify(token, 'super-strong-secret');
   } catch (err) {
-    return res.status(401).send( {message: 'Необходима авторизация'} );
+    return res.status(403).send( {message: 'Необходима авторизация'} );
   }
   //console.log(payload);
   req.user = payload;
