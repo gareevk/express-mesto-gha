@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const {login, createUser} = require('./controllers/users');
 
@@ -36,6 +37,7 @@ app.use('/', require('./routes/cards'));
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Такой страницы не существует' });
 });
+app.use(errors());
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode).send({ message: err.message });
