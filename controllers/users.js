@@ -46,65 +46,38 @@ module.exports.getUserById = (req, res, next) => {
   */
 }
 
-module.exports.createUser = (req, res, next) => {
-  console.log(req.body);
-  const { name, about, avatar, email, password } = req.body;
-  const emailValidation = User.findOne({email});
-  if (emailValidation) {
-    next( new ConflictError('Такой пользоватль уже существует'));
-    return;
-  }
-  bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name: name,
-      about: about,
-      avatar: avatar,
-      email: email,
-      password: hash,
-    }))
-    .then((user) => {
-      console.log(user);
-      const newUser = {
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id
-      }
-      res.status(201).send({data:newUser});
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-        //res.status(400).send({ message: 'Переданы некорректные данные' });
-        //return;
-      }
-      //res.status(500).send( {message: err.message} );
-      next(err);
-    });
-  /*
+module.exports.createUser = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { name, about, avatar, email, password } = req.body;
+    const emailValidation = await User.findOne({email})
+    console.log(emailValidation);
+    if (emailValidation) {
+      next( new ConflictError('Такой пользоватль уже существует'));
+      return;
+    }
     const hash = await bcrypt.hash(password, 10);
-    console.log(hash);
-    const user = await User.create( {
+    const user = await User.create ({
       name: name,
       about: about,
       avatar: avatar,
       email: email,
       password: hash
-    }, {new: true, runValidators: true} );
-    console.log(user);
-    res.status(200).send( { data: user } );
-    } catch (err) {
-    console.log(err.message);
+    });
+    const newUser = {
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+      _id: user._id
+    }
+    res.status(201).send({data:newUser});
+  } catch(err) {
     if (err.name === 'ValidationError') {
-      res.status(400).send({ message: 'Переданы некорректные данные' });
-      return;
+      next(new BadRequestError('Переданы некорректные данные'));
     }
-    res.status(500).send( {message: err.message} );
-    }
-    */
+    next(err);
+  }
 }
 
 module.exports.updateUser = async (req, res, next) => {
@@ -139,7 +112,7 @@ module.exports.updateAvatar = async (req, res, next) => {
   }
 }
 
-module.exports.login = async (req, res) => {
+module.exports.login = async (req, res, next) => {
   console.log(req.body);
   const { email, password } = req.body;
   try {
