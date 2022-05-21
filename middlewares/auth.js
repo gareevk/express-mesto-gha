@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const UnauthorizedError = require('../middlewares/UnauthorizedError')
+const UnauthorizedError = require('../middlewares/UnauthorizedError');
 
 module.exports = async (req, res, next) => {
   const {authorization} = req.headers;
