@@ -5,6 +5,7 @@ const NotFoundError = require('../middlewares/NotFoundError');
 const Unauthorized = require('../middlewares/UnauthorizedError');
 const UnauthorizedError = require('../middlewares/UnauthorizedError');
 const ConflictError = require('../middlewares/ConflictError');
+const ForbiddenError = require('../middlewares/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -25,12 +26,12 @@ module.exports.deleteCard = async (req, res, next) => {
     const deleteCard = await Card.findById(req.params.cardId);
     console.log(deleteCard);
     if (!deleteCard) {
-      next( new BadRequestError('Карточка не найдена'));
+      next( new NotFoundError('Карточка не найдена'));
       //res.status(404).send({ message: 'Карточка не найдена' });
       return;
     }
     if (!deleteCard.owner.toString().includes(req.user._id)) {
-      next(new NotFoundError('У вас нет прав на удаление данной карточки'));
+      next(new ForbiddenError('У вас нет прав на удаление данной карточки'));
       //res.status(404).send({ message: 'У вас нет прав на удаление данной карточки' });
       return;
     }
