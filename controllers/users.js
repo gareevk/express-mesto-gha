@@ -6,6 +6,7 @@ const BadRequestError = require('../middlewares/BadRequestError');
 const NotFoundError = require('../middlewares/NotFoundError');
 const Unauthorized = require('../middlewares/UnauthorizedError');
 const UnauthorizedError = require('../middlewares/UnauthorizedError');
+const ConflictError = require('../middlewares/ConflictError');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -48,6 +49,11 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   console.log(req.body);
   const { name, about, avatar, email, password } = req.body;
+  const emailValidation = User.findOne({email});
+  if (emailValidation) {
+    next( new ConflictError('Такой пользоватль уже существует'));
+    return;
+  }
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name: name,
@@ -58,7 +64,14 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((user) => {
       console.log(user);
-      res.status(201).send({data:user});
+      const newUser = {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id
+      }
+      res.status(201).send({data:newUser});
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
