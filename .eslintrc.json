@@ -19,6 +19,6 @@
         "react"
     ],
     "rules": {
-      "allow": ["foo_", "_bar"]
+      "no-underscore-dangle": ["error", { "allow": ["_id"]}]
     }
 }
