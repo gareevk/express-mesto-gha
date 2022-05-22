@@ -40,6 +40,10 @@ app.use('/', require('./routes/cards'));
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Такой страницы не существует'));
+<<<<<<< HEAD
+=======
+  //res.status(404).send({ message: 'Такой страницы не существует' });
+>>>>>>> fix/reviews2
 });
 app.use(errors());
 
