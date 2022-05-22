@@ -40,17 +40,15 @@ app.use('/', require('./routes/cards'));
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Такой страницы не существует'));
-<<<<<<< HEAD
-=======
-  //res.status(404).send({ message: 'Такой страницы не существует' });
->>>>>>> fix/reviews2
 });
 app.use(errors());
 
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   res.status(err.statusCode).send({ message: err.message });
 });
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log('Ссылка на сервер');
 });

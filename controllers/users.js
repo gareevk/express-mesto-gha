@@ -1,3 +1,5 @@
+/* eslint-disable linebreak-style */
+// eslint-disable-next-line linebreak-style
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
@@ -22,6 +24,7 @@ module.exports.getUserById = (req, res, next) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.log(err.name);
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан некорректный id пользователя'));
@@ -118,6 +121,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       res.status(200).send({ data: user });
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.log(err.name);
       if (err.name === 'CastError') {
         next(new BadRequestError('Передан некорректный id пользователя'));

@@ -1,4 +1,6 @@
-const { ObjectId } = require('mongoose').Types.ObjectId;
+/* eslint-disable object-shorthand */
+/* eslint-disable prefer-destructuring */
+const ObjectId = require('mongoose').Types.ObjectId;
 const Card = require('../models/card');
 const BadRequestError = require('../middlewares/BadRequestError');
 const NotFoundError = require('../middlewares/NotFoundError');
@@ -38,7 +40,11 @@ module.exports.createCard = async (req, res, next) => {
   try {
     const { name, link } = req.body;
     const owner = req.user._id;
-    const newCard = await Card.create({ name, link, owner });
+    const newCard = await Card.create({
+      name: name,
+      link: link,
+      owner: owner,
+    });
     res.status(200).send({ data: newCard });
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -66,6 +72,7 @@ module.exports.likeCard = async (req, res, next) => {
     }
     res.status(200).send({ data: likeCard });
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
     if (err.name === 'CastError') {
       next(new BadRequestError('Передан некорректный id карточки'));
@@ -77,6 +84,8 @@ module.exports.likeCard = async (req, res, next) => {
 
 module.exports.dislikeCard = async (req, res, next) => {
   try {
+    // eslint-disable-next-line no-console
+    console.log(req.params);
     if (req.params.cardId.length !== 24 || !ObjectId.isValid(req.params.cardId)) {
       next(new BadRequestError('Передан некорректный id карточки'));
       return;
