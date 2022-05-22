@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable object-shorthand */
 /* eslint-disable prefer-destructuring */
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -84,8 +85,6 @@ module.exports.likeCard = async (req, res, next) => {
 
 module.exports.dislikeCard = async (req, res, next) => {
   try {
-    // eslint-disable-next-line no-console
-    console.log(req.params);
     if (req.params.cardId.length !== 24 || !ObjectId.isValid(req.params.cardId)) {
       next(new BadRequestError('Передан некорректный id карточки'));
       return;

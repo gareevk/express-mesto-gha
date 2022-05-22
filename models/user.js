@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 // eslint-disable-next-line import/no-unresolved
