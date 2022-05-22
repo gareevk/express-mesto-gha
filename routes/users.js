@@ -9,7 +9,7 @@ router.get('/users', getUsers);
 router.get('/users/me', getCurrentUser);
 router.get('/users/:_id', celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().length(24)
+    _id: Joi.string().length(24).hex().required()
   })
 }), getUserById);
 router.patch('/users/me', celebrate({
@@ -20,7 +20,7 @@ router.patch('/users/me', celebrate({
 }),updateUser);
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(urlRegEx)
+    avatar: Joi.string().required().pattern(urlRegEx)
   })
 }),updateAvatar);
 

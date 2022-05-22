@@ -2,9 +2,6 @@ const Card = require('../models/card');
 const ObjectId = require('mongoose').Types.ObjectId;
 const BadRequestError = require('../middlewares/BadRequestError');
 const NotFoundError = require('../middlewares/NotFoundError');
-const Unauthorized = require('../middlewares/UnauthorizedError');
-const UnauthorizedError = require('../middlewares/UnauthorizedError');
-const ConflictError = require('../middlewares/ConflictError');
 const ForbiddenError = require('../middlewares/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {

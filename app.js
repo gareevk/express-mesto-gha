@@ -6,6 +6,7 @@ const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const {login, createUser} = require('./controllers/users');
 const { celebrate, Joi } = require('celebrate');
+const NotFoundError = require('./middlewares/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -48,8 +49,9 @@ app.use(auth);
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Такой страницы не существует' });
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Такой страницы не существует'));
+  //res.status(404).send({ message: 'Такой страницы не существует' });
 });
 app.use(errors());
 
