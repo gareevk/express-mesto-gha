@@ -112,11 +112,13 @@ module.exports.login = async (req, res, next) => {
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
-  const { _id } = req.user._id;
+  const { _id } = req.user;
   User.findById(_id)
     .then((user) => {
-      if (user === null) {
+      console.log(user);
+      if (!user) {
         next(new BadRequestError('Пользователь не найден'));
+        return;
       }
       res.status(200).send({ data: user });
     })
