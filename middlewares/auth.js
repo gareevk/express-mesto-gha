@@ -1,23 +1,21 @@
+/* eslint-disable linebreak-style */
 const jwt = require('jsonwebtoken');
-const UnauthorizedError = require('../middlewares/UnauthorizedError');
+const UnauthorizedError = require('./UnauthorizedError');
 
 module.exports = async (req, res, next) => {
-  const {authorization} = req.headers;
-  console.log(authorization);
+  const { authorization } = req.headers;
 
-  if ( !authorization || !authorization.startsWith('Bearer')) {
-    next( new UnauthorizedError('Необходима авторизация'));
-    //return res.status(401).send( {message: 'Необходима авторизация'} );
+  if (!authorization || !authorization.startsWith('Bearer')) {
+    next(new UnauthorizedError('Необходима авторизация'));
+    return;
   }
   const token = authorization.replace('Bearer ', '');
   let payload;
   try {
     payload = await jwt.verify(token, 'super-strong-secret');
   } catch (err) {
-    next( new UnauthorizedError('Необходима авторизация'));
-    //return res.status(403).send( {message: 'Необходима авторизация'} );
+    next(new UnauthorizedError('Необходима авторизация'));
   }
-  //console.log(payload);
   req.user = payload;
 
   next();
