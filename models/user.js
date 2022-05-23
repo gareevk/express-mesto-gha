@@ -1,10 +1,8 @@
 /* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
-// eslint-disable-next-line spaced-comment
-//const isUrl = require('validator/lib/isUrl');
 const bcrypt = require('bcryptjs');
-const validator = require('validator');
+const urlRegEx = require('../utils/urlValidation');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,10 +20,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    validate: {
-      validator: (v) => validator.isUrl(v),
-      message: 'Неправильный формат ссылки',
-    },
+    validate: urlRegEx,
   },
   email: {
     type: String,

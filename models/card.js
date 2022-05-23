@@ -1,8 +1,6 @@
 /* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
-const validator = require('validator');
-// eslint-disable-next-line spaced-comment
-//const isUrl = require('validator/lib/isUrl');
+const urlRegEx = require('../utils/urlValidation');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -14,10 +12,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: {
-      validator: (v) => validator.isUrl(v),
-      message: 'Неправильный формат ссылки',
-    },
+    validate: urlRegEx,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
