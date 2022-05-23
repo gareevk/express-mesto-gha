@@ -1,7 +1,8 @@
 /* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-unresolved
-const isUrl = require('validator/lib/isUrl');
+const validator = require('validator');
+// eslint-disable-next-line spaced-comment
+//const isUrl = require('validator/lib/isUrl');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -14,7 +15,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => isUrl(v),
+      validator: (v) => validator.isUrl(v),
       message: 'Неправильный формат ссылки',
     },
   },

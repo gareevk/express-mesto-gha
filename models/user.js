@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
+// eslint-disable-next-line spaced-comment
 //const isUrl = require('validator/lib/isUrl');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
