@@ -8,10 +8,10 @@ const NotFoundError = require('../middlewares/NotFoundError');
 const UnauthorizedError = require('../middlewares/UnauthorizedError');
 const ConflictError = require('../middlewares/ConflictError');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send({ data: users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {

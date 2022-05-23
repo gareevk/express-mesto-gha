@@ -46,7 +46,8 @@ app.use(errors());
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
+  const { statusCode = 500 } = err;
+  res.status(statusCode).send({ message: err.message });
 });
 
 app.listen(PORT, () => {
