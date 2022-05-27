@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const allowedCors = require('../utils/allowedCors');
 
 module.exports.corsValidation = (req, res, next) => {
