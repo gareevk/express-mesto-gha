@@ -8,6 +8,7 @@ const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./middlewares/NotFoundError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { corsValidation } = require('./middlewares/corsValidation');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -20,6 +21,15 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(express.json());
 
 app.use(requestLogger);
+app.use(errorLogger);
+
+app.use(corsValidation);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
