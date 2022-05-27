@@ -7,6 +7,7 @@ const { celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./middlewares/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -17,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(express.json());
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -42,6 +45,9 @@ app.use('/', require('./routes/cards'));
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Такой страницы не существует'));
 });
+
+app.use(errorLogger);
+
 app.use(errors());
 
 // eslint-disable-next-line no-unused-vars
